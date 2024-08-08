@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:02:00 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/08 18:59:09 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/08 19:20:27 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_philo
 
 # define SEC_TO_USEC 1000000
 # define MSEC_TO_USEC 1000
+# define START_USEC 1000000
 
 int	atoi_check_num(const char *str, int *target);
 void	ft_putnbr_fd(int n, int fd);
