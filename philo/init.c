@@ -24,11 +24,9 @@ int	init_philo(t_vars *vars, t_philo **philo)
 		(*philo + i)->utime_start = 0;
 		i++;
 	}
-	if (pthread_mutex_init(&(vars->print), NULL))
-		return (1);
+
 	if (pthread_mutex_init(&(vars->time), NULL))
 		return (1);
-
 
 	vars->forks = malloc(sizeof(pthread_mutex_t) * vars->num_philo);
 	if (vars->forks == NULL)

@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:02:00 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/08 19:20:27 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/08 22:15:05 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct s_vars
 	long 			start_time;
 	// int	monitor;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	print;
 	pthread_mutex_t	time;
 }	t_vars;
 
@@ -53,6 +52,8 @@ typedef struct s_philo
 # define SEC_TO_USEC 1000000
 # define MSEC_TO_USEC 1000
 # define START_USEC 1000000
+
+# define USLEEP_MAX (int)(UINT32_MAX/MSEC_TO_USEC)
 
 int	atoi_check_num(const char *str, int *target);
 void	ft_putnbr_fd(int n, int fd);

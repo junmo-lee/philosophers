@@ -13,7 +13,7 @@ void	spend_utime(long wait_utime, t_vars *vars)
 {
 	long	start_utime;
 
-	start_utime = get_utime() - 100;
+	start_utime = get_utime() - 50;
 	(void)vars;
 	while (get_utime() < start_utime + wait_utime)
 	{

@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:03:12 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/08 19:21:35 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/08 22:24:22 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	main_parsing(t_vars *vars, int argc, char **argv)
 		return (EXIT_FAILURE);
 	if (vars->num_philo <= 0 || vars->utime_die < 0 || vars->utime_eat < 0 || vars->utime_sleep < 0)
 		return (EXIT_FAILURE);
+	if (vars->utime_die > USLEEP_MAX || vars->utime_eat > USLEEP_MAX || vars->utime_sleep > USLEEP_MAX)
+		return (EXIT_FAILURE);
 	if (argc == 6)
 	{
 		if (atoi_check_num(argv[5], &(vars->num_req_eat)) == 0)
@@ -40,7 +42,49 @@ int	main_parsing(t_vars *vars, int argc, char **argv)
 	return (EXIT_SUCCESS);
 }
 
+int	monitoring(t_vars *vars, t_philo *philo)
+{
+	int	i;
 
+	while (vars->is_finish == 0)
+	{
+		pthread_mutex_lock(&(vars->time));
+		if (vars->num_philo == vars->finished_eat)
+		{
+			vars->is_finish = 1;
+			break ;
+		}
+		i = 0;
+		while (i < vars->num_philo)
+		{
+			if ((get_utime() - (philo + i)->utime_last_eat) > vars->utime_die)
+			{
+				philo_print(vars, i, "died");
+				vars->is_finish = 1;
+				break ;
+			}
+			i++;
+		}
+		pthread_mutex_unlock(&(vars->time));
+		usleep(10);
+	}
+	return (0);
+}
+
+int	wait_philo(t_vars *vars, t_philo *philo)
+{
+	int	i;
+
+	i = 0;
+	while (i < vars->num_philo)
+	{
+		pthread_join((philo + i)->thread, NULL);
+		i++;
+		usleep(5);
+	}
+	usleep(100);
+	return (0);
+}
 
 int	make_philo(t_vars *vars, t_philo *philo)
 {
@@ -48,18 +92,12 @@ int	make_philo(t_vars *vars, t_philo *philo)
 	vars->start_time = get_utime();
 	while (i < vars->num_philo)
 	{
-		philo[i].utime_start = vars->start_time + SEC_TO_USEC;
-		philo[i].utime_last_eat = vars->start_time + SEC_TO_USEC;
-        if (pthread_create(&(philo[i].thread), NULL, thread_philo, &(philo[i])))
+		(philo + i)->utime_start = vars->start_time + SEC_TO_USEC;
+		(philo + i)->utime_last_eat = vars->start_time + SEC_TO_USEC;
+        if (pthread_create(&((philo + i)->thread), NULL, thread_philo, philo + i))
             return (EXIT_FAILURE);
 		usleep(2);
 		i++;
-	}
-
-	// 나중에 모니터링 구현
-	while (1)
-	{
-		usleep(1000);
 	}
 	return (0);
 }
@@ -71,7 +109,6 @@ int main(int argc, char **argv)
 	t_vars	vars;
 	t_philo	*philos;
 
-	memset(&vars, 0, sizeof(t_vars));
 	if (argc != 5 && argc != 6)
 	{
 		printf("only 4 or 5 arg\n");
@@ -86,5 +123,7 @@ int main(int argc, char **argv)
 
 	init_philo(&vars, &philos);
 	make_philo(&vars, philos);
+	monitoring(&vars, philos);
+	wait_philo(&vars, philos);
 	return (EXIT_SUCCESS);
 }
