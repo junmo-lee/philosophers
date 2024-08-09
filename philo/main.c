@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:03:12 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/08 22:24:22 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/09 18:05:24 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,30 +44,45 @@ int	main_parsing(t_vars *vars, int argc, char **argv)
 
 int	monitoring(t_vars *vars, t_philo *philo)
 {
-	int	i;
+	int		i;
+	int		is_end;
+	long	utime;
 
-	while (vars->is_finish == 0)
+	is_end = 0;
+	while (is_end == 0)
 	{
-		pthread_mutex_lock(&(vars->time));
+		utime = get_utime();
+		pthread_mutex_lock(&(vars->check_eat));
 		if (vars->num_philo == vars->finished_eat)
 		{
-			vars->is_finish = 1;
+			is_end = 1;
+			pthread_mutex_unlock(&(vars->check_eat));
 			break ;
 		}
-		i = 0;
-		while (i < vars->num_philo)
+		pthread_mutex_unlock(&(vars->check_eat));
+		
+		if (is_end == 0)
 		{
-			if ((get_utime() - (philo + i)->utime_last_eat) > vars->utime_die)
+			i = 0;
+			while (i < vars->num_philo)
 			{
-				philo_print(vars, i, "died");
-				vars->is_finish = 1;
-				break ;
+				pthread_mutex_lock(&(vars->time));
+				if ((utime - (philo + i)->utime_last_eat) > vars->utime_die)
+				{
+					philo_print(vars->start_time, i + 1, "died");
+					is_end = 1;
+					pthread_mutex_unlock(&(vars->time));
+					break ;
+				}
+				pthread_mutex_unlock(&(vars->time));
+				i++;
 			}
-			i++;
 		}
-		pthread_mutex_unlock(&(vars->time));
-		usleep(10);
+		usleep(50);
 	}
+	pthread_mutex_lock(&(vars->check_end));
+	vars->is_finish = 1;
+	pthread_mutex_unlock(&(vars->check_end));
 	return (0);
 }
 
@@ -80,9 +95,8 @@ int	wait_philo(t_vars *vars, t_philo *philo)
 	{
 		pthread_join((philo + i)->thread, NULL);
 		i++;
-		usleep(5);
 	}
-	usleep(100);
+	usleep(10);
 	return (0);
 }
 
@@ -90,25 +104,60 @@ int	make_philo(t_vars *vars, t_philo *philo)
 {
 	int i = 0;
 	vars->start_time = get_utime();
+	if (vars->num_philo == 1)
+	{
+		philo->utime_start = vars->start_time + SEC_TO_USEC;
+		philo->utime_last_eat = vars->start_time + SEC_TO_USEC;
+		if (pthread_create(&(philo->thread), NULL, thread_solo_philo, philo))
+            return (EXIT_FAILURE);
+		return (0);
+	}
 	while (i < vars->num_philo)
 	{
 		(philo + i)->utime_start = vars->start_time + SEC_TO_USEC;
 		(philo + i)->utime_last_eat = vars->start_time + SEC_TO_USEC;
-        if (pthread_create(&((philo + i)->thread), NULL, thread_philo, philo + i))
-            return (EXIT_FAILURE);
+		if (i % 2 == 0)
+		{
+	        if (pthread_create(&((philo + i)->thread), NULL, thread_odd_philo, philo + i))
+	            return (EXIT_FAILURE);
+		}
+		else
+		{
+	        if (pthread_create(&((philo + i)->thread), NULL, thread_even_philo, philo + i))
+	            return (EXIT_FAILURE);
+		}
 		usleep(2);
 		i++;
 	}
 	return (0);
 }
 
+int	main_free(t_vars *vars, t_philo *philos)
+{
+	if (vars->forks != NULL)
+	{
+		// memset(vars->forks, 0, sizeof(vars->forks) * vars->num_philo);
+		free(vars->forks);
+	}
+	if (philos != NULL)
+	{
+		// memset(vars->forks, 0, sizeof(vars->forks) * vars->num_philo);
+		free(philos);
+	}
+	return (0);
+}
 
+void	f(void)
+{
+	system("leaks philo");
+}
 
 int main(int argc, char **argv)
 {
 	t_vars	vars;
 	t_philo	*philos;
 
+	atexit(f);
 	if (argc != 5 && argc != 6)
 	{
 		printf("only 4 or 5 arg\n");
@@ -119,11 +168,12 @@ int main(int argc, char **argv)
 		printf("invalid argument\n");
 		return (EXIT_FAILURE);
 	}
-	printf("%d %d %d %d %d\n", vars.num_philo, vars.utime_die, vars.utime_eat, vars.utime_sleep, vars.num_req_eat);
+	// printf("%d %d %d %d %d\n", vars.num_philo, vars.utime_die, vars.utime_eat, vars.utime_sleep, vars.num_req_eat);
 
 	init_philo(&vars, &philos);
 	make_philo(&vars, philos);
 	monitoring(&vars, philos);
 	wait_philo(&vars, philos);
+	main_free(&vars, philos);
 	return (EXIT_SUCCESS);
 }

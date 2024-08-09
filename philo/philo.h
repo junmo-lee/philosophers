@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:02:00 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/08 22:15:05 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/09 17:00:10 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,14 @@ typedef struct s_vars
 	int				utime_eat;
 	int				utime_sleep;
 	int				num_req_eat;
-	int				is_finish;
+	int		is_finish;
 	int				finished_eat;
 	long 			start_time;
 	// int	monitor;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	time;
+	pthread_mutex_t	check_eat;
+	pthread_mutex_t	check_end;
 }	t_vars;
 
 typedef struct s_philo
@@ -60,13 +62,17 @@ void	ft_putnbr_fd(int n, int fd);
 int	ft_strlen(const char *str);
 
 long	get_utime(void);
-void	spend_utime(long wait_utime, t_vars *arg);
+int		spend_utime(long wait_utime, t_vars *arg);
 int	init_philo(t_vars *vars, t_philo **philo);
-int	philo_print(t_vars *vars, int id, const char *str);
+int	philo_print(long start_time, int id, const char *str);
 
 void	sleep_until_even_eat(t_vars *vars);
 
-void    *thread_philo(void *argv);
-int	philo_eat(t_philo *philo);
+void    *thread_odd_philo(void *argv);
+void    *thread_solo_philo(void *argv);
+void    *thread_even_philo(void *argv);
+int	philo_even_eat(t_philo *philo);
+int	philo_odd_eat(t_philo *philo);
+int	philo_solo_eat(t_philo *philo);
 
 #endif

@@ -27,6 +27,10 @@ int	init_philo(t_vars *vars, t_philo **philo)
 
 	if (pthread_mutex_init(&(vars->time), NULL))
 		return (1);
+	if (pthread_mutex_init(&(vars->check_eat), NULL))
+		return (1);
+	if (pthread_mutex_init(&(vars->check_end), NULL))
+		return (1);
 
 	vars->forks = malloc(sizeof(pthread_mutex_t) * vars->num_philo);
 	if (vars->forks == NULL)
