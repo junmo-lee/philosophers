@@ -15,7 +15,7 @@ int	init_philo(t_vars *vars, t_philo **philo)
 		(*philo + i)->vars = vars;
 		(*philo + i)->id = i + 1;
 		(*philo + i)->left = i;
-		if (i != vars->num_philo)
+		if (i + 1 != vars->num_philo)
 			(*philo + i)->right = i + 1;
 		else
 			(*philo + i)->right = 0;

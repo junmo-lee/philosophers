@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:03:12 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 15:46:23 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 17:08:02 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,9 @@ int	monitoring(t_vars *vars, t_philo *philo)
 			i = 0;
 			while (i < vars->num_philo)
 			{
+				t_philo *temp = philo + i;
 				pthread_mutex_lock(vars->check_time + i);
-				if ((utime - (philo + i)->utime_last_eat) > vars->utime_die)
+				if ((utime - temp->utime_last_eat) > vars->utime_die)
 				{
 					philo_print(vars->start_time, i + 1, "died");
 					is_end = 1;
@@ -81,7 +82,7 @@ int	monitoring(t_vars *vars, t_philo *philo)
 				i++;
 			}
 		}
-		usleep(50);
+		usleep(500);
 	}
 	pthread_mutex_lock(&(vars->check_end));
 	vars->is_finish = 1;
