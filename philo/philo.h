@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:02:00 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/09 17:00:10 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/09 18:52:42 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ typedef struct s_vars
 	int				utime_eat;
 	int				utime_sleep;
 	int				num_req_eat;
-	int		is_finish;
+	int				is_finish;
 	int				finished_eat;
 	long 			start_time;
 	// int	monitor;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	time;
+	pthread_mutex_t	*check_time;
 	pthread_mutex_t	check_eat;
 	pthread_mutex_t	check_end;
 }	t_vars;

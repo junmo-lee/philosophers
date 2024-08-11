@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:03:12 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/09 18:05:24 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 15:46:23 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,29 +52,32 @@ int	monitoring(t_vars *vars, t_philo *philo)
 	while (is_end == 0)
 	{
 		utime = get_utime();
-		pthread_mutex_lock(&(vars->check_eat));
-		if (vars->num_philo == vars->finished_eat)
+		if (vars->num_req_eat != 0)
 		{
-			is_end = 1;
+			pthread_mutex_lock(&(vars->check_eat));
+			if (vars->num_philo == vars->finished_eat)
+			{
+				is_end = 1;
+				pthread_mutex_unlock(&(vars->check_eat));
+				break ;
+			}
 			pthread_mutex_unlock(&(vars->check_eat));
-			break ;
 		}
-		pthread_mutex_unlock(&(vars->check_eat));
 		
 		if (is_end == 0)
 		{
 			i = 0;
 			while (i < vars->num_philo)
 			{
-				pthread_mutex_lock(&(vars->time));
+				pthread_mutex_lock(vars->check_time + i);
 				if ((utime - (philo + i)->utime_last_eat) > vars->utime_die)
 				{
 					philo_print(vars->start_time, i + 1, "died");
 					is_end = 1;
-					pthread_mutex_unlock(&(vars->time));
+					pthread_mutex_unlock(vars->check_time + i);
 					break ;
 				}
-				pthread_mutex_unlock(&(vars->time));
+				pthread_mutex_unlock(vars->check_time + i);
 				i++;
 			}
 		}
@@ -157,7 +160,7 @@ int main(int argc, char **argv)
 	t_vars	vars;
 	t_philo	*philos;
 
-	atexit(f);
+	// atexit(f);
 	if (argc != 5 && argc != 6)
 	{
 		printf("only 4 or 5 arg\n");

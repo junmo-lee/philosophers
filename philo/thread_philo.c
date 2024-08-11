@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:08:58 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/09 17:59:16 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 15:54:44 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,18 @@ void    *thread_odd_philo(void *argv)
 
 		philo_odd_eat(philo);
 		
-		pthread_mutex_lock(&(vars->check_eat));
-        if (vars->num_req_eat != 0 && vars->num_req_eat == philo->cnt_eat)
-        {
-            vars->finished_eat += 1;
+		if (vars->num_req_eat != 0)
+		{
+			pthread_mutex_lock(&(vars->check_eat));
+	        if (vars->num_req_eat == philo->cnt_eat)
+	        {
+	            vars->finished_eat += 1;
+				pthread_mutex_unlock(&(vars->check_eat));
+				philo_print(vars->start_time, philo->id, "is sleeping");
+	            break ;
+	        }
 			pthread_mutex_unlock(&(vars->check_eat));
-			philo_print(vars->start_time, philo->id, "is sleeping");
-            break ;
-        }
-		pthread_mutex_unlock(&(vars->check_eat));
+		}
 		
         philo_print(vars->start_time, philo->id, "is sleeping");
         if (spend_utime(vars->utime_sleep, vars) == 1)
@@ -66,11 +69,11 @@ int	philo_odd_eat(t_philo *philo)
 
 	philo_print(vars->start_time, philo->id, "has taken a fork");
 	philo_print(vars->start_time, philo->id, "is eating");
-	pthread_mutex_lock(&(vars->time));
+	pthread_mutex_lock(vars->check_time + philo->id - 1);
 
 	philo->utime_last_eat = get_utime();
 
-	pthread_mutex_unlock(&(vars->time));
+	pthread_mutex_unlock(vars->check_time + philo->id - 1);
 
 	if (spend_utime(vars->utime_eat, vars) == 1)
 	{
@@ -108,16 +111,18 @@ void    *thread_even_philo(void *argv)
 		pthread_mutex_unlock(&(vars->check_end));
 
 		philo_even_eat(philo);
-		
-		pthread_mutex_lock(&(vars->check_eat));
-        if (vars->num_req_eat != 0 && vars->num_req_eat == philo->cnt_eat)
-        {
-            vars->finished_eat += 1;
+		if (vars->num_req_eat != 0)
+		{
+			pthread_mutex_lock(&(vars->check_eat));
+	        if (vars->num_req_eat == philo->cnt_eat)
+	        {
+	            vars->finished_eat += 1;
+				pthread_mutex_unlock(&(vars->check_eat));
+				philo_print(vars->start_time, philo->id, "is sleeping");
+	            break ;
+	        }
 			pthread_mutex_unlock(&(vars->check_eat));
-			philo_print(vars->start_time, philo->id, "is sleeping");
-            break ;
-        }
-		pthread_mutex_unlock(&(vars->check_eat));
+		}
 		
         philo_print(vars->start_time, philo->id, "is sleeping");
         if (spend_utime(vars->utime_sleep, vars) == 1)
@@ -133,26 +138,26 @@ int	philo_even_eat(t_philo *philo)
 
 	vars = philo->vars;
 
-	pthread_mutex_lock(&(vars->forks[philo->right]));
+	pthread_mutex_lock(&(vars->forks[philo->left]));
 	philo_print(vars->start_time, philo->id, "has taken a fork");
 
-	pthread_mutex_lock(&(vars->forks[philo->left]));
+	pthread_mutex_lock(&(vars->forks[philo->right]));
 
 	philo_print(vars->start_time, philo->id, "has taken a fork");
 	philo_print(vars->start_time, philo->id, "is eating");
-	pthread_mutex_lock(&(vars->time));
+	pthread_mutex_lock(vars->check_time + philo->id - 1);
 
 	philo->utime_last_eat = get_utime();
 
-	pthread_mutex_unlock(&(vars->time));
+	pthread_mutex_unlock(vars->check_time + philo->id - 1);
 	if (spend_utime(vars->utime_eat, vars) == 1)
 	{
-		pthread_mutex_unlock(&(vars->forks[philo->left]));
 		pthread_mutex_unlock(&(vars->forks[philo->right]));
+		pthread_mutex_unlock(&(vars->forks[philo->left]));
 		return (0);
 	}
-	pthread_mutex_unlock(&(vars->forks[philo->left]));
 	pthread_mutex_unlock(&(vars->forks[philo->right]));
+	pthread_mutex_unlock(&(vars->forks[philo->left]));
 	philo->cnt_eat++;
 
 	return (0);
