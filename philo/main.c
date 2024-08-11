@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:03:12 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 22:15:30 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 22:23:12 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int	main_parsing(t_vars *vars, int argc, char **argv)
 		return (EXIT_FAILURE);
 	else if (atoi_check_num(argv[4], &(vars->utime_sleep)) == 0)
 		return (EXIT_FAILURE);
-	if (vars->num_philo <= 0 || vars->utime_die < 0 || vars->utime_eat < 0 || vars->utime_sleep < 0)
+	if (vars->num_philo <= 0 || vars->utime_die < 0 \
+		|| vars->utime_eat < 0 || vars->utime_sleep < 0)
 		return (EXIT_FAILURE);
 	if (argc == 6)
 	{
@@ -40,54 +41,6 @@ int	main_parsing(t_vars *vars, int argc, char **argv)
 	return (EXIT_SUCCESS);
 }
 
-int	monitoring(t_vars *vars, t_philo *philo)
-{
-	int		i;
-	int		is_end;
-	long	utime;
-
-	is_end = 0;
-	while (is_end == 0)
-	{
-		utime = get_utime();
-		if (vars->num_req_eat != 0)
-		{
-			pthread_mutex_lock(&(vars->check_eat));
-			if (vars->num_philo == vars->finished_eat)
-			{
-				is_end = 1;
-				pthread_mutex_unlock(&(vars->check_eat));
-				break ;
-			}
-			pthread_mutex_unlock(&(vars->check_eat));
-		}
-		
-		if (is_end == 0)
-		{
-			i = 0;
-			while (i < vars->num_philo)
-			{
-				t_philo *temp = philo + i;
-				pthread_mutex_lock(vars->check_time + i);
-				if ((utime - temp->utime_last_eat) > vars->utime_die)
-				{
-					philo_print(vars->start_time, i + 1, "died");
-					is_end = 1;
-					pthread_mutex_unlock(vars->check_time + i);
-					break ;
-				}
-				pthread_mutex_unlock(vars->check_time + i);
-				i++;
-			}
-		}
-		usleep(100);
-	}
-	pthread_mutex_lock(&(vars->check_end));
-	vars->is_finish = 1;
-	pthread_mutex_unlock(&(vars->check_end));
-	return (0);
-}
-
 int	wait_philo(t_vars *vars, t_philo *philo)
 {
 	int	i;
@@ -102,55 +55,21 @@ int	wait_philo(t_vars *vars, t_philo *philo)
 	return (0);
 }
 
-int	make_philo(t_vars *vars, t_philo *philo)
-{
-	int i = 0;
-	vars->start_time = get_utime();
-	if (vars->num_philo == 1)
-	{
-		philo->utime_start = vars->start_time + SEC_TO_USEC;
-		philo->utime_last_eat = vars->start_time + SEC_TO_USEC;
-		if (pthread_create(&(philo->thread), NULL, thread_solo_philo, philo))
-            return (EXIT_FAILURE);
-		return (0);
-	}
-	while (i < vars->num_philo)
-	{
-		(philo + i)->utime_start = vars->start_time + SEC_TO_USEC;
-		(philo + i)->utime_last_eat = vars->start_time + SEC_TO_USEC;
-		if (i % 2 == 0)
-		{
-	        if (pthread_create(&((philo + i)->thread), NULL, thread_odd_philo, philo + i))
-	            return (EXIT_FAILURE);
-		}
-		else
-		{
-	        if (pthread_create(&((philo + i)->thread), NULL, thread_even_philo, philo + i))
-	            return (EXIT_FAILURE);
-		}
-		usleep(2);
-		i++;
-	}
-	return (0);
-}
 
 int	main_free(t_vars *vars, t_philo *philos)
 {
 	if (vars->forks != NULL)
 	{
-		//  malloc(sizeof(t_fork) * vars->num_philo);
 		memset(vars->forks, 0, sizeof(t_fork) * vars->num_philo);
 		free(vars->forks);
 	}
 	if (vars->check_time != NULL)
 	{
-		//vars->check_time = malloc(sizeof(pthread_mutex_t) * vars->num_philo);
 		memset(vars->check_time, 0, sizeof(pthread_mutex_t) * vars->num_philo);
 		free(vars->check_time);
 	}
 	if (philos != NULL)
 	{
-		// *philo = malloc(sizeof(t_philo) * (vars->num_philo));
 		memset(philos, 0, sizeof(t_philo) * vars->num_philo);
 		free(philos);
 	}
@@ -178,8 +97,6 @@ int main(int argc, char **argv)
 		printf("invalid argument\n");
 		return (EXIT_FAILURE);
 	}
-	// printf("%d %d %d %d %d\n", vars.num_philo, vars.utime_die, vars.utime_eat, vars.utime_sleep, vars.num_req_eat);
-
 	init_philo(&vars, &philos);
 	make_philo(&vars, philos);
 	monitoring(&vars, philos);
