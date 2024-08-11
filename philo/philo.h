@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:02:00 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/09 18:52:42 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 18:05:48 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@
 # include <sys/time.h>
 # include <pthread.h>
 
+typedef	struct s_fork
+{
+	int				is_take;
+	pthread_mutex_t	mutex;
+}	t_fork;
+
+
 typedef struct s_vars
 {
 	int				num_philo;
@@ -33,7 +40,7 @@ typedef struct s_vars
 	int				finished_eat;
 	long 			start_time;
 	// int	monitor;
-	pthread_mutex_t	*forks;
+	t_fork			*forks;
 	pthread_mutex_t	*check_time;
 	pthread_mutex_t	check_eat;
 	pthread_mutex_t	check_end;
