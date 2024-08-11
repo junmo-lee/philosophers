@@ -3,13 +3,13 @@
 NAME	= philo
 
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror # -g3 -fsanitize=thread
+CFLAGS	= -Wall -Wextra -Werror # -g -fsanitize=thread
 
 ifdef DEBUG_FLAG
 	CFLAGS += -g -fsanitize=address
 endif
 # -g -fsanitize=thread
-# -g -fsanitize=leak
+# -g -fsanitize=address
 #INC		= philo.h
 
 SRCS	= main.c \

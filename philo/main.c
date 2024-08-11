@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:03:12 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 18:00:18 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 18:52:14 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,17 +140,21 @@ int	main_free(t_vars *vars, t_philo *philos)
 {
 	if (vars->forks != NULL)
 	{
-		// memset(vars->forks, 0, sizeof(vars->forks) * vars->num_philo);
+		//  malloc(sizeof(t_fork) * vars->num_philo);
+		memset(vars->forks, 0, sizeof(t_fork) * vars->num_philo);
 		free(vars->forks);
-	}
-	if (philos != NULL)
-	{
-		// memset(vars->forks, 0, sizeof(vars->forks) * vars->num_philo);
-		free(philos);
 	}
 	if (vars->check_time != NULL)
 	{
+		//vars->check_time = malloc(sizeof(pthread_mutex_t) * vars->num_philo);
+		memset(vars->check_time, 0, sizeof(pthread_mutex_t) * vars->num_philo);
 		free(vars->check_time);
+	}
+	if (philos != NULL)
+	{
+		// *philo = malloc(sizeof(t_philo) * (vars->num_philo));
+		memset(philos, 0, sizeof(t_philo) * vars->num_philo);
+		free(philos);
 	}
 	return (0);
 }

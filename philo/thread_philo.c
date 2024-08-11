@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:08:58 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 18:28:59 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 18:46:54 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ void    *thread_odd_philo(void *argv)
 		}
 		pthread_mutex_unlock(&(vars->check_end));
 
-		philo_odd_eat(philo);
+		if (philo_odd_eat(philo) == 1)
+			return (0);
 		
 		if (vars->num_req_eat != 0)
 		{
@@ -86,7 +87,7 @@ int	philo_odd_eat(t_philo *philo)
 		pthread_mutex_unlock(&(vars->forks[philo->right].mutex));
 		vars->forks[philo->left].is_take = 0;
 		pthread_mutex_unlock(&(vars->forks[philo->left].mutex));
-		return (0);
+		return (1);
 	}
 	vars->forks[philo->right].is_take = 0;
 	pthread_mutex_unlock(&(vars->forks[philo->right].mutex));
@@ -120,7 +121,8 @@ void    *thread_even_philo(void *argv)
 		}
 		pthread_mutex_unlock(&(vars->check_end));
 
-		philo_even_eat(philo);
+		if (philo_even_eat(philo) == 1)
+			return (0);
 		if (vars->num_req_eat != 0)
 		{
 			pthread_mutex_lock(&(vars->check_eat));
@@ -167,7 +169,7 @@ int	philo_even_eat(t_philo *philo)
 		pthread_mutex_unlock(&(vars->forks[philo->left].mutex));
 		vars->forks[philo->right].is_take = 0;
 		pthread_mutex_unlock(&(vars->forks[philo->right].mutex));
-		return (0);
+		return (1);
 	}
 	vars->forks[philo->left].is_take = 0;
 	pthread_mutex_unlock(&(vars->forks[philo->left].mutex));
