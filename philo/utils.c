@@ -23,7 +23,7 @@ int	spend_utime(long wait_utime, t_vars *vars)
 			return (1);
 		}
 		pthread_mutex_unlock(&(vars->check_end));
-		usleep(50);
+		usleep(100);
 	}
 	return (0);
 }
