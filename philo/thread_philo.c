@@ -6,11 +6,39 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:08:58 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 18:46:54 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 21:59:05 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "philo.h"
+
+
+int	check_is_finish(t_vars *vars)
+{
+	pthread_mutex_lock(&(vars->check_end));
+	if (vars->is_finish == 1)
+	{
+		pthread_mutex_unlock(&(vars->check_end));
+		return (1);
+	}
+	pthread_mutex_unlock(&(vars->check_end));
+	return (0);
+}
+
+int	check_philo_eat(t_vars *vars, t_philo *philo)
+{
+	pthread_mutex_lock(&(vars->check_eat));
+	if (vars->num_req_eat == philo->cnt_eat)
+	{
+		vars->finished_eat += 1;
+		pthread_mutex_unlock(&(vars->check_eat));
+		philo_print(vars->start_time, philo->id, "is sleeping");
+		return (1);
+	}
+	pthread_mutex_unlock(&(vars->check_eat));
+	return (0);
+}
+
 
 void    *thread_odd_philo(void *argv)
 {
@@ -63,6 +91,7 @@ void    *thread_odd_philo(void *argv)
 int	philo_odd_eat(t_philo *philo)
 {
 	t_vars	*vars;
+	int		ret;
 
 	vars = philo->vars;
 
@@ -81,21 +110,14 @@ int	philo_odd_eat(t_philo *philo)
 
 	pthread_mutex_unlock(vars->check_time + philo->id - 1);
 
-	if (spend_utime(vars->utime_eat, vars) == 1)
-	{
-		vars->forks[philo->right].is_take = 0;
-		pthread_mutex_unlock(&(vars->forks[philo->right].mutex));
-		vars->forks[philo->left].is_take = 0;
-		pthread_mutex_unlock(&(vars->forks[philo->left].mutex));
-		return (1);
-	}
+	ret = spend_utime(vars->utime_eat, vars);
 	vars->forks[philo->right].is_take = 0;
 	pthread_mutex_unlock(&(vars->forks[philo->right].mutex));
 	vars->forks[philo->left].is_take = 0;
 	pthread_mutex_unlock(&(vars->forks[philo->left].mutex));
-	philo->cnt_eat++;
-
-	return (0);
+	if (ret == 0)
+		philo->cnt_eat++;
+	return (ret);
 }
 void    *thread_even_philo(void *argv)
 {
@@ -148,6 +170,7 @@ void    *thread_even_philo(void *argv)
 int	philo_even_eat(t_philo *philo)
 {
 	t_vars	*vars;
+	int		ret;
 
 	vars = philo->vars;
 
@@ -163,21 +186,14 @@ int	philo_even_eat(t_philo *philo)
 	philo->utime_last_eat = get_utime();
 
 	pthread_mutex_unlock(vars->check_time + philo->id - 1);
-	if (spend_utime(vars->utime_eat, vars) == 1)
-	{
-		vars->forks[philo->left].is_take = 0;
-		pthread_mutex_unlock(&(vars->forks[philo->left].mutex));
-		vars->forks[philo->right].is_take = 0;
-		pthread_mutex_unlock(&(vars->forks[philo->right].mutex));
-		return (1);
-	}
+	ret = spend_utime(vars->utime_eat, vars);
 	vars->forks[philo->left].is_take = 0;
 	pthread_mutex_unlock(&(vars->forks[philo->left].mutex));
 	vars->forks[philo->right].is_take = 0;
 	pthread_mutex_unlock(&(vars->forks[philo->right].mutex));
-	philo->cnt_eat++;
-
-	return (0);
+	if (ret == 0)
+		philo->cnt_eat++;
+	return (ret);
 }
 
 void    *thread_solo_philo(void *argv)
