@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:08:58 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 17:23:32 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 17:49:54 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void    *thread_odd_philo(void *argv)
 	{
 		usleep(100);
 	}
+	if (philo->id == vars->num_philo)
+		philo_print(vars->start_time, philo->id, "is thinking");
     while (1)
     {
 		pthread_mutex_lock(&(vars->check_end));
@@ -99,6 +101,7 @@ void    *thread_even_philo(void *argv)
 	{
 		usleep(100);
 	}
+	philo_print(vars->start_time, philo->id, "is thinking");
 	if (spend_utime(vars->utime_eat, vars) == 1)
 		return (0);
     while (1)
