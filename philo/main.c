@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:03:12 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 17:22:02 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 18:00:18 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,10 @@ int	main_free(t_vars *vars, t_philo *philos)
 	{
 		// memset(vars->forks, 0, sizeof(vars->forks) * vars->num_philo);
 		free(philos);
+	}
+	if (vars->check_time != NULL)
+	{
+		free(vars->check_time);
 	}
 	return (0);
 }
