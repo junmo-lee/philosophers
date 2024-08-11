@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:03:12 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 18:52:14 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 22:15:30 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ int	main_parsing(t_vars *vars, int argc, char **argv)
 	else if (atoi_check_num(argv[4], &(vars->utime_sleep)) == 0)
 		return (EXIT_FAILURE);
 	if (vars->num_philo <= 0 || vars->utime_die < 0 || vars->utime_eat < 0 || vars->utime_sleep < 0)
-		return (EXIT_FAILURE);
-	if (vars->utime_die > USLEEP_MAX || vars->utime_eat > USLEEP_MAX || vars->utime_sleep > USLEEP_MAX)
 		return (EXIT_FAILURE);
 	if (argc == 6)
 	{
