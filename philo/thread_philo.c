@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:08:58 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/12 17:25:08 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 17:30:58 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,18 +103,18 @@ int	philo_even_eat(t_philo *philo)
 	vars = philo->vars;
 	pthread_mutex_lock(&(vars->mutex_fork[philo->left]));
 	philo_print(vars->start_time, philo->id, "has taken a fork");
-	vars->forks[philo->right] = 1;
-	pthread_mutex_lock(&(vars->mutex_fork[philo->right]));
 	vars->forks[philo->left] = 1;
+	pthread_mutex_lock(&(vars->mutex_fork[philo->right]));
+	vars->forks[philo->right] = 1;
 	philo_print(vars->start_time, philo->id, "has taken a fork");
 	philo_print(vars->start_time, philo->id, "is eating");
 	pthread_mutex_lock(vars->check_time + philo->id - 1);
 	philo->utime_last_eat = get_utime();
 	pthread_mutex_unlock(vars->check_time + philo->id - 1);
 	ret = spend_utime(vars->utime_eat, vars);
+	vars->forks[philo->right] = 0;
 	pthread_mutex_unlock(&(vars->mutex_fork[philo->right]));
 	vars->forks[philo->left] = 0;
-	vars->forks[philo->right] = 0;
 	pthread_mutex_unlock(&(vars->mutex_fork[philo->left]));
 	if (ret == 0)
 		philo->cnt_eat++;
