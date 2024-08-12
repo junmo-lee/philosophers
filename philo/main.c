@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:03:12 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/12 16:41:53 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 17:10:38 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,8 @@ int	main(int argc, char **argv)
 	init_philo(&vars, &philos);
 	if (vars.num_philo == 1)
 		solo_init(&vars, philos);
-	make_other_philo(&vars, philos);
+	else
+		make_other_philo(&vars, philos);
 	monitoring(&vars, philos);
 	wait_philo(&vars, philos);
 	main_free(&vars, philos);

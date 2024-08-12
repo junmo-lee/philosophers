@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 18:58:51 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/12 16:41:12 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 17:10:08 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ void	*thread_solo_philo(void *argv)
 			return (0);
 		}
 		pthread_mutex_unlock(&(vars->check_end));
-		if (spend_utime(100, vars) == 1)
-			return (0);
+		usleep(100);
 	}
 	return (0);
 }
