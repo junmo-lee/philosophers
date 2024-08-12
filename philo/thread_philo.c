@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:08:58 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 22:28:14 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 15:01:11 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ void	*thread_odd_philo(void *argv)
 	vars = philo->vars;
 	while (get_utime() - vars->start_time < SEC_TO_USEC)
 		usleep(100);
-	if (philo->id == vars->num_philo)
-		philo_print(vars->start_time, philo->id, "is thinking");
 	while (1)
 	{
 		if (check_is_finish(vars) == 1)
@@ -32,10 +30,12 @@ void	*thread_odd_philo(void *argv)
 		if (vars->num_req_eat != 0 && check_philo_eat(vars, philo) == 1)
 			return (0);
 		philo_print(vars->start_time, philo->id, "is sleeping");
-		if (spend_utime(vars->utime_sleep, vars) == 1)
+		if (spend_utime(vars->utime_sleep - 50, vars) == 1)
 			return (0);
-		usleep(philo->id * 10);
 		philo_print(vars->start_time, philo->id, "is thinking");
+		if (vars->num_philo % 2 == 1 && \
+			spend_utime(vars->utime_eat - 50, vars) == 1)
+			return (0);
 	}
 	return (0);
 }
@@ -87,9 +87,8 @@ void	*thread_even_philo(void *argv)
 		if (vars->num_req_eat != 0 && check_philo_eat(vars, philo) == 1)
 			return (0);
 		philo_print(vars->start_time, philo->id, "is sleeping");
-		if (spend_utime(vars->utime_sleep, vars) == 1)
+		if (spend_utime(vars->utime_sleep + 50, vars) == 1)
 			return (0);
-		usleep(philo->id * 10);
 		philo_print(vars->start_time, philo->id, "is thinking");
 	}
 	return (0);

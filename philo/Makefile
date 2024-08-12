@@ -13,7 +13,7 @@ endif
 #INC		= philo.h
 
 SRCS	= main.c \
-	ft_function.c utils.c init.c thread_philo.c thread_utils.c solo_philo.c monitoring.c
+	ft_function.c utils.c init.c thread_philo.c thread_utils.c solo_philo.c monitoring.c make_philo.c
 
 OBJS	= $(SRCS:.c=.o)
 

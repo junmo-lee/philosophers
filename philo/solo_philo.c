@@ -6,18 +6,46 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 18:58:51 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 22:11:36 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 15:01:19 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	num_philo_is_one(t_vars *vars, t_philo *philo)
+int	last_odd_philo_front(t_vars *vars, t_philo *philo)
 {
-	philo->utime_start = vars->start_time + SEC_TO_USEC;
-	philo->utime_last_eat = vars->start_time + SEC_TO_USEC;
-	if (pthread_create(&(philo->thread), NULL, thread_solo_philo, philo))
-		return (EXIT_FAILURE);
+	while (get_utime() - vars->start_time < SEC_TO_USEC)
+		usleep(100);
+	philo_print(vars->start_time, philo->id, "is thinking");
+	if (spend_utime(vars->utime_eat + vars->utime_sleep - 100, vars) == 1)
+		return (1);
+	return (0);
+}
+
+void	*thread_last_odd_philo(void *argv)
+{
+	t_philo			*philo;
+	t_vars			*vars;
+
+	philo = argv;
+	vars = philo->vars;
+	if (last_odd_philo_front(vars, philo) == 1)
+		return (0);
+	while (1)
+	{
+		if (check_is_finish(vars) == 1)
+			return (0);
+		if (philo_odd_eat(philo) == 1)
+			return (0);
+		if (vars->num_req_eat != 0 && check_philo_eat(vars, philo) == 1)
+			return (0);
+		philo_print(vars->start_time, philo->id, "is sleeping");
+		if (spend_utime(vars->utime_sleep + 50, vars) == 1)
+			return (0);
+		philo_print(vars->start_time, philo->id, "is thinking");
+		if (spend_utime(vars->utime_eat - 50, vars) == 1)
+			return (0);
+	}
 	return (0);
 }
 

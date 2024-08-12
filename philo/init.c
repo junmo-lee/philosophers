@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 22:27:38 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 22:27:39 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 14:13:13 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,34 +77,5 @@ int	solo_init(t_vars *vars, t_philo *philo)
 	philo->utime_last_eat = vars->start_time + SEC_TO_USEC;
 	if (pthread_create(&(philo->thread), NULL, thread_solo_philo, philo))
 		return (EXIT_FAILURE);
-	return (0);
-}
-
-int	make_philo(t_vars *vars, t_philo *philo)
-{
-	int	i;
-
-	vars->start_time = get_utime();
-	if (vars->num_philo == 1)
-		return (solo_init(vars, philo));
-	i = 0;
-	while (i < vars->num_philo)
-	{
-		(philo + i)->utime_start = vars->start_time + SEC_TO_USEC;
-		(philo + i)->utime_last_eat = vars->start_time + SEC_TO_USEC;
-		if (i % 2 == 0)
-		{
-			if (pthread_create(&((philo + i)->thread), \
-				NULL, thread_odd_philo, philo + i))
-				return (EXIT_FAILURE);
-		}
-		else
-		{
-			if (pthread_create(&((philo + i)->thread), \
-				NULL, thread_even_philo, philo + i))
-				return (EXIT_FAILURE);
-		}
-		i++;
-	}
 	return (0);
 }
