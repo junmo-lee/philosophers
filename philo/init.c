@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 22:27:38 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/12 14:13:13 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 16:31:26 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	set_mutex(t_vars *vars)
 	i = 0;
 	while (i < vars->num_philo)
 	{
-		if (pthread_mutex_init(&(vars->forks[i].mutex), NULL))
+		if (pthread_mutex_init(&(vars->mutex_fork[i]), NULL))
 			return (1);
 		if (pthread_mutex_init((vars->check_time + i), NULL))
 			return (1);
@@ -53,21 +53,35 @@ int	set_mutex(t_vars *vars)
 	return (0);
 }
 
+int	i_sqrt(int num)
+{
+	int	ret;
+
+	ret = 0;
+	while (ret * ret < num)
+		ret++;
+	return (ret);
+}
+
 int	init_philo(t_vars *vars, t_philo **philo)
 {
 	*philo = malloc(sizeof(t_philo) * (vars->num_philo));
 	if (*philo == NULL)
 		return (EXIT_FAILURE);
 	set_philo(vars, *philo);
-	vars->forks = malloc(sizeof(t_fork) * vars->num_philo);
+	vars->forks = malloc(sizeof(int) * vars->num_philo);
 	if (vars->forks == NULL)
 		return (1);
-	memset(vars->forks, 0, sizeof(t_fork) * vars->num_philo);
+	memset(vars->forks, 0, sizeof(int) * vars->num_philo);
+	vars->mutex_fork = malloc(sizeof(pthread_mutex_t) * vars->num_philo);
+	if (vars->mutex_fork == NULL)
+		return (1);
 	vars->check_time = malloc(sizeof(pthread_mutex_t) * vars->num_philo);
 	if (vars->check_time == NULL)
 		return (1);
 	if (set_mutex(vars) == 1)
 		return (1);
+	vars->bias = 5 * (i_sqrt(vars->num_philo)) + 50;
 	return (EXIT_SUCCESS);
 }
 
