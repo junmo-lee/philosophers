@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:03:12 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 22:23:12 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 13:47:33 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int	wait_philo(t_vars *vars, t_philo *philo)
 	return (0);
 }
 
-
 int	main_free(t_vars *vars, t_philo *philos)
 {
 	if (vars->forks != NULL)
@@ -76,17 +75,11 @@ int	main_free(t_vars *vars, t_philo *philos)
 	return (0);
 }
 
-void	f(void)
-{
-	system("leaks philo");
-}
-
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_vars	vars;
 	t_philo	*philos;
 
-	// atexit(f);
 	if (argc != 5 && argc != 6)
 	{
 		printf("only 4 or 5 arg\n");

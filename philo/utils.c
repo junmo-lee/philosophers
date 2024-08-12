@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/11 22:28:25 by junmlee           #+#    #+#             */
+/*   Updated: 2024/08/12 13:46:51 by junmlee          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 long	get_utime(void)
@@ -43,11 +55,7 @@ void	sleep_until_even_eat(t_vars *vars)
 
 int	philo_print(long start_time, int id, const char *str)
 {
-	printf("%ld %d %s\n", ((get_utime() - start_time - SEC_TO_USEC) / MSEC_TO_USEC), id, str);
-	// ft_putnbr_fd((int)(get_utime() / 1000), STDOUT_FILENO);
-	// write(STDOUT_FILENO, " ", 1);
-	// ft_putnbr_fd(id, STDOUT_FILENO);
-	// write(STDOUT_FILENO, " ", 1);
-	// write(STDOUT_FILENO, str, ft_strlen(str));
+	printf("%ld %d %s\n", \
+		((get_utime() - start_time - SEC_TO_USEC) / MSEC_TO_USEC), id, str);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:08:58 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 22:09:58 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/11 22:28:14 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,19 @@ int	philo_odd_eat(t_philo *philo)
 
 	vars = philo->vars;
 	pthread_mutex_lock(&(vars->forks[philo->left].mutex));
-	// vars->forks[philo->left].is_take = 1;
+	vars->forks[philo->left].is_take = 1;
 	philo_print(vars->start_time, philo->id, "has taken a fork");
 	pthread_mutex_lock(&(vars->forks[philo->right].mutex));
-	// vars->forks[philo->right].is_take = 1;
+	vars->forks[philo->right].is_take = 1;
 	philo_print(vars->start_time, philo->id, "has taken a fork");
 	philo_print(vars->start_time, philo->id, "is eating");
 	pthread_mutex_lock(vars->check_time + philo->id - 1);
-
 	philo->utime_last_eat = get_utime();
-	
 	pthread_mutex_unlock(vars->check_time + philo->id - 1);
 	ret = spend_utime(vars->utime_eat, vars);
-	// vars->forks[philo->right].is_take = 0;
+	vars->forks[philo->right].is_take = 0;
 	pthread_mutex_unlock(&(vars->forks[philo->right].mutex));
-	// vars->forks[philo->left].is_take = 0;
+	vars->forks[philo->left].is_take = 0;
 	pthread_mutex_unlock(&(vars->forks[philo->left].mutex));
 	if (ret == 0)
 		philo->cnt_eat++;
@@ -105,20 +103,18 @@ int	philo_even_eat(t_philo *philo)
 	vars = philo->vars;
 	pthread_mutex_lock(&(vars->forks[philo->right].mutex));
 	philo_print(vars->start_time, philo->id, "has taken a fork");
-	// vars->forks[philo->right].is_take = 1;
+	vars->forks[philo->right].is_take = 1;
 	pthread_mutex_lock(&(vars->forks[philo->left].mutex));
-	// vars->forks[philo->left].is_take = 1;
+	vars->forks[philo->left].is_take = 1;
 	philo_print(vars->start_time, philo->id, "has taken a fork");
 	philo_print(vars->start_time, philo->id, "is eating");
 	pthread_mutex_lock(vars->check_time + philo->id - 1);
-
 	philo->utime_last_eat = get_utime();
-
 	pthread_mutex_unlock(vars->check_time + philo->id - 1);
 	ret = spend_utime(vars->utime_eat, vars);
-	// vars->forks[philo->left].is_take = 0;
+	vars->forks[philo->left].is_take = 0;
 	pthread_mutex_unlock(&(vars->forks[philo->left].mutex));
-	// vars->forks[philo->right].is_take = 0;
+	vars->forks[philo->right].is_take = 0;
 	pthread_mutex_unlock(&(vars->forks[philo->right].mutex));
 	if (ret == 0)
 		philo->cnt_eat++;

@@ -6,12 +6,11 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 19:05:52 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 22:21:49 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 13:47:11 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
 
 int	check_philo_die(t_vars *vars, t_philo *philo, long utime)
 {
