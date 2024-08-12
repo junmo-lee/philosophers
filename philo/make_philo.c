@@ -6,13 +6,13 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 14:12:47 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/12 16:41:25 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 17:18:27 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	make_other_philo(t_vars *vars, t_philo *philo)
+int	make_philo(t_vars *vars, t_philo *philo)
 {
 	int	i;
 

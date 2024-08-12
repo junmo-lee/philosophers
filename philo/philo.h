@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 15:02:00 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/12 16:42:47 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 17:18:27 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,11 @@ long	get_utime(void);
 int		spend_utime(long wait_utime, t_vars *arg);
 int		init_philo(t_vars *vars, t_philo **philo);
 int		make_philo(t_vars *vars, t_philo *philo);
-int		make_other_philo(t_vars *vars, t_philo *philo);
-int		make_last_philo(t_vars *vars, t_philo *philo);
 int		philo_print(long start_time, int id, const char *str);
 
 void	sleep_until_even_eat(t_vars *vars);
 
 void	*thread_odd_philo(void *argv);
-void	*thread_last_odd_philo(void *argv);
 void	*thread_even_philo(void *argv);
 void	*thread_solo_philo(void *argv);
 int		philo_even_eat(t_philo *philo);

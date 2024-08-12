@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:08:58 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/12 16:44:00 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 17:25:08 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	*thread_odd_philo(void *argv)
 	vars = philo->vars;
 	while (get_utime() - vars->start_time < SEC_TO_USEC)
 		usleep(100);
+	if (philo->id == vars->num_philo)
+		philo_print(vars->start_time, philo->id, "is thinking");
 	while (1)
 	{
 		if (check_is_finish(vars) == 1)

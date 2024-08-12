@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 19:11:35 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/11 22:10:14 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 17:26:26 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@ int	check_philo_eat(t_vars *vars, t_philo *philo)
 		vars->finished_eat += 1;
 		pthread_mutex_unlock(&(vars->check_eat));
 		philo_print(vars->start_time, philo->id, "is sleeping");
+		if (spend_utime(vars->utime_sleep, vars) == 1)
+			return (0);
+		usleep(philo->id * 10);
+		philo_print(vars->start_time, philo->id, "is thinking");
 		return (1);
 	}
 	pthread_mutex_unlock(&(vars->check_eat));
