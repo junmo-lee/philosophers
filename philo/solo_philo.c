@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 18:58:51 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/12 16:33:31 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 16:41:12 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ void	*thread_last_odd_philo(void *argv)
 			return (0);
 		usleep(philo->id * 10);
 		philo_print(vars->start_time, philo->id, "is thinking");
-		// if (spend_utime(vars->utime_eat - vars->bias / 2, vars) == 1)
-		// 	return (0);
 	}
 	return (0);
 }
@@ -72,9 +70,9 @@ int	philo_solo_eat(t_philo *philo)
 
 	vars = philo->vars;
 	pthread_mutex_lock(&(vars->mutex_fork[philo->left]));
-	// vars->forks[philo->left] = 1;
+	vars->forks[philo->left] = 1;
 	philo_print(vars->start_time, philo->id, "has taken a fork");
-	// vars->forks[philo->left] = 0;
+	vars->forks[philo->left] = 0;
 	pthread_mutex_unlock(&(vars->mutex_fork[philo->left]));
 	return (0);
 }
