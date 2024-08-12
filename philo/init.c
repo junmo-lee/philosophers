@@ -6,7 +6,7 @@
 /*   By: junmlee <junmlee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 22:27:38 by junmlee           #+#    #+#             */
-/*   Updated: 2024/08/12 16:43:05 by junmlee          ###   ########.fr       */
+/*   Updated: 2024/08/12 17:14:15 by junmlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	init_philo(t_vars *vars, t_philo **philo)
 
 int	solo_init(t_vars *vars, t_philo *philo)
 {
+	vars->start_time = get_utime();
 	philo->utime_start = vars->start_time + SEC_TO_USEC;
 	philo->utime_last_eat = vars->start_time + SEC_TO_USEC;
 	if (pthread_create(&(philo->thread), NULL, thread_solo_philo, philo))
